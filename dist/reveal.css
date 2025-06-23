@@ -57,3 +57,11 @@
   right: 10%;
 }
 
+.stack {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 53px;
+}
+
