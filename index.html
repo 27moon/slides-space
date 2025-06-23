@@ -56,8 +56,75 @@
 					src="./src/images/canban4.png"
 				  />
 				</section>
-			</div>
+		<section>
+				<section><h2>Commercetools</h2></section>
+				<section>
+					<h3>what to use?</h3>
+					<div class="image-wrapper">
+						<img class="r-stretch" src="dist/images/medicine.jpg">
+						<div class="row-texts">
+							<div class="fragment fade-up overlay-text">HTTP API</div>
+							<div class="fragment fade-up overlay-text">TypeScript SDK</div>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h4>Used for login:</h4>
+					<pre><code data-line-numbers="1|2-10|11-24|37" data-ln-start-from="1" data-trim class="language-javascript">
+						export const tokenCache = {
+								get: (): TokenStore => {
+									const valueToken = localStorage.getItem('ctp_token');
+									if (!valueToken) return { token: '', expirationTime: 0 };
+									const parsedToken: unknown = JSON.parse(valueToken);
+									if (isTokenStore(parsedToken)) {
+										return parsedToken;
+									}
+									return { token: '', expirationTime: 0 };
+								},
+								set: (token: TokenStore | AccessToken): void => {
+									if (isAccessToken(token)) {
+										const expirationTime = Date.now() + token.expires_in * 1000;
+										const adapted: TokenStore = {
+											token: token.access_token,
+											refreshToken: token.refresh_token,
+											expirationTime,
+										};
+										localStorage.setItem('ctp_token', JSON.stringify(adapted));
+										} else {
+											localStorage.setItem('ctp_anon_token', JSON.stringify(token));
+											}
+									globalThis.dispatchEvent(new Event('storage'));
+								},
+							};
+
+							const anonymousMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
+   								host: 'https://auth.europe-west1.gcp.commercetools.com',
+  								projectKey,
+								credentials: {
+									clientId: import.meta.env.VITE_CTP_CLIENT_ID || '',
+									clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET || '',
+									anonymousId,
+									},
+								scopes: (import.meta.env.VITE_CTP_SCOPES || '').trim().split(/\s+/),
+								fetch,
+								tokenCache,
+							};
+					</code>
+					</pre>
+				</section>
+				<section>
+					<img class="r-stretch" src="dist/images/token-error.PNG">
+					<video data-autoplay src="dist/video/token-error.mp4"></video>
+				</section>
+				<section>
+					<h4>Solution:</h4>
+					<img class="r-stretch" src="dist/images/token-solution.PNG">
+				</section>
+			</section>
+
+
 		</div>
+	</div>
 
 	<script src="dist/reveal.js"></script>
 	<script src="plugin/notes/notes.js"></script>
